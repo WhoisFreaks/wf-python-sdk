@@ -2,19 +2,7 @@
 
 import typing
 
-import pydantic
-from ...core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from .domain_availability import DomainAvailability
+from .single_domain_availability_response import SingleDomainAvailabilityResponse
+from .suggested_domain_availability_response import SuggestedDomainAvailabilityResponse
 
-
-class DomainAvailabilityResponse(UniversalBaseModel):
-    domain_available_response: typing.List[DomainAvailability]
-
-    if IS_PYDANTIC_V2:
-        model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
-    else:
-
-        class Config:
-            frozen = True
-            smart_union = True
-            extra = pydantic.Extra.allow
+DomainAvailabilityResponse = typing.Union[SingleDomainAvailabilityResponse, SuggestedDomainAvailabilityResponse]

@@ -6,10 +6,14 @@ from .bulk_domain_availability import BulkDomainAvailability
 from .bulk_domain_availability_response import BulkDomainAvailabilityResponse
 from .domain_availability import DomainAvailability
 from .domain_availability_response import DomainAvailabilityResponse
+from .single_domain_availability_response import SingleDomainAvailabilityResponse
+from .suggested_domain_availability_response import SuggestedDomainAvailabilityResponse
 
 __all__ = [
     "BulkDomainAvailability",
     "BulkDomainAvailabilityResponse",
     "DomainAvailability",
     "DomainAvailabilityResponse",
+    "SingleDomainAvailabilityResponse",
+    "SuggestedDomainAvailabilityResponse",
 ]

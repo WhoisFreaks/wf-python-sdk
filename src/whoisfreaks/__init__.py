@@ -19,6 +19,8 @@ from .domain_availability import (
     BulkDomainAvailabilityResponse,
     DomainAvailability,
     DomainAvailabilityResponse,
+    SingleDomainAvailabilityResponse,
+    SuggestedDomainAvailabilityResponse,
 )
 from .environment import WhoisfreaksApiEnvironment
 from .file_status import DatabaseUpdates, DatasetStatus, FileStatusApiResponse, Newly, UpdateFrequency
@@ -125,6 +127,7 @@ __all__ = [
     "RequestTimedOut",
     "ResellerContact",
     "ServiceIsUnavailable",
+    "SingleDomainAvailabilityResponse",
     "SslCertificate",
     "SslExtensions",
     "SslIssuer",
@@ -136,6 +139,7 @@ __all__ = [
     "SuccessResponse",
     "SuccessResponseHistorical",
     "SuccessResponseReverse",
+    "SuggestedDomainAvailabilityResponse",
     "TooManyRequests",
     "UnableToFetchWhois",
     "UnavailableDomainExtension",

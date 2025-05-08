@@ -7,6 +7,8 @@ from .types import (
     BulkDomainAvailabilityResponse,
     DomainAvailability,
     DomainAvailabilityResponse,
+    SingleDomainAvailabilityResponse,
+    SuggestedDomainAvailabilityResponse,
 )
 
 __all__ = [
@@ -14,4 +16,6 @@ __all__ = [
     "BulkDomainAvailabilityResponse",
     "DomainAvailability",
     "DomainAvailabilityResponse",
+    "SingleDomainAvailabilityResponse",
+    "SuggestedDomainAvailabilityResponse",
 ]

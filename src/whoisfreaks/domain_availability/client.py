@@ -35,6 +35,7 @@ class DomainAvailabilityClient:
         sug: typing.Optional[bool] = None,
         count: typing.Optional[int] = None,
         format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> DomainAvailabilityResponse:
         """
@@ -52,6 +53,8 @@ class DomainAvailabilityClient:
 
         format : typing.Optional[str]
 
+        source : typing.Optional[str]
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -64,10 +67,16 @@ class DomainAvailabilityClient:
         from whoisfreaks import WhoisfreaksApi
         from whoisfreaks.environment import WhoisfreaksApiEnvironment
         client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-        client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, )
+        client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, source='dns', )
         """
         _response = self._raw_client.domain_availability_lookup(
-            api_key=api_key, domain=domain, sug=sug, count=count, format=format, request_options=request_options
+            api_key=api_key,
+            domain=domain,
+            sug=sug,
+            count=count,
+            format=format,
+            source=source,
+            request_options=request_options,
         )
         return _response.data
 
@@ -174,6 +183,7 @@ class AsyncDomainAvailabilityClient:
         sug: typing.Optional[bool] = None,
         count: typing.Optional[int] = None,
         format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> DomainAvailabilityResponse:
         """
@@ -191,6 +201,8 @@ class AsyncDomainAvailabilityClient:
 
         format : typing.Optional[str]
 
+        source : typing.Optional[str]
+
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -205,11 +217,17 @@ class AsyncDomainAvailabilityClient:
         import asyncio
         client = AsyncWhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
         async def main() -> None:
-            await client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, )
+            await client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, source='dns', )
         asyncio.run(main())
         """
         _response = await self._raw_client.domain_availability_lookup(
-            api_key=api_key, domain=domain, sug=sug, count=count, format=format, request_options=request_options
+            api_key=api_key,
+            domain=domain,
+            sug=sug,
+            count=count,
+            format=format,
+            source=source,
+            request_options=request_options,
         )
         return _response.data
 

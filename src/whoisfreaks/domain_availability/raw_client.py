@@ -27,6 +27,7 @@ class RawDomainAvailabilityClient:
         sug: typing.Optional[bool] = None,
         count: typing.Optional[int] = None,
         format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[DomainAvailabilityResponse]:
         """
@@ -43,6 +44,8 @@ class RawDomainAvailabilityClient:
         count : typing.Optional[int]
 
         format : typing.Optional[str]
+
+        source : typing.Optional[str]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -61,6 +64,7 @@ class RawDomainAvailabilityClient:
                 "sug": sug,
                 "count": count,
                 "format": format,
+                "source": source,
             },
             request_options=request_options,
         )
@@ -206,6 +210,7 @@ class AsyncRawDomainAvailabilityClient:
         sug: typing.Optional[bool] = None,
         count: typing.Optional[int] = None,
         format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[DomainAvailabilityResponse]:
         """
@@ -222,6 +227,8 @@ class AsyncRawDomainAvailabilityClient:
         count : typing.Optional[int]
 
         format : typing.Optional[str]
+
+        source : typing.Optional[str]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -240,6 +247,7 @@ class AsyncRawDomainAvailabilityClient:
                 "sug": sug,
                 "count": count,
                 "format": format,
+                "source": source,
             },
             request_options=request_options,
         )

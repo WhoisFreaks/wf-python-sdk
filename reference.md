@@ -670,7 +670,7 @@ Check availability of a Domain Name
 from whoisfreaks import WhoisfreaksApi
 from whoisfreaks.environment import WhoisfreaksApiEnvironment
 client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, )
+client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, source='dns', )
 
 ```
 </dd>
@@ -719,6 +719,14 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dd>
 
 **format:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**source:** `typing.Optional[str]` 
     
 </dd>
 </dl>
