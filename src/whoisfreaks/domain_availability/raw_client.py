@@ -138,7 +138,7 @@ class RawDomainAvailabilityClient:
             raise ApiError(headers=dict(_response.headers), status_code=_response.status_code, body=_response.text)
         raise ApiError(headers=dict(_response.headers), status_code=_response.status_code, body=_response_json)
 
-    def bulk_domain_availability_lookup_with_custom_tl_ds(
+    def bulk_domain_availability_lookup_with_custom_tlds(
         self,
         *,
         api_key: str,
@@ -321,7 +321,7 @@ class AsyncRawDomainAvailabilityClient:
             raise ApiError(headers=dict(_response.headers), status_code=_response.status_code, body=_response.text)
         raise ApiError(headers=dict(_response.headers), status_code=_response.status_code, body=_response_json)
 
-    async def bulk_domain_availability_lookup_with_custom_tl_ds(
+    async def bulk_domain_availability_lookup_with_custom_tlds(
         self,
         *,
         api_key: str,

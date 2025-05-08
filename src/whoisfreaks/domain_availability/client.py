@@ -118,7 +118,7 @@ class DomainAvailabilityClient:
         )
         return _response.data
 
-    def bulk_domain_availability_lookup_with_custom_tl_ds(
+    def bulk_domain_availability_lookup_with_custom_tlds(
         self,
         *,
         api_key: str,
@@ -152,9 +152,9 @@ class DomainAvailabilityClient:
         from whoisfreaks import WhoisfreaksApi
         from whoisfreaks.environment import WhoisfreaksApiEnvironment
         client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-        client.domain_availability.bulk_domain_availability_lookup_with_custom_tl_ds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
+        client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
         """
-        _response = self._raw_client.bulk_domain_availability_lookup_with_custom_tl_ds(
+        _response = self._raw_client.bulk_domain_availability_lookup_with_custom_tlds(
             api_key=api_key, domain=domain, tld=tld, format=format, request_options=request_options
         )
         return _response.data
@@ -272,7 +272,7 @@ class AsyncDomainAvailabilityClient:
         )
         return _response.data
 
-    async def bulk_domain_availability_lookup_with_custom_tl_ds(
+    async def bulk_domain_availability_lookup_with_custom_tlds(
         self,
         *,
         api_key: str,
@@ -308,10 +308,10 @@ class AsyncDomainAvailabilityClient:
         import asyncio
         client = AsyncWhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
         async def main() -> None:
-            await client.domain_availability.bulk_domain_availability_lookup_with_custom_tl_ds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
+            await client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
         asyncio.run(main())
         """
-        _response = await self._raw_client.bulk_domain_availability_lookup_with_custom_tl_ds(
+        _response = await self._raw_client.bulk_domain_availability_lookup_with_custom_tlds(
             api_key=api_key, domain=domain, tld=tld, format=format, request_options=request_options
         )
         return _response.data

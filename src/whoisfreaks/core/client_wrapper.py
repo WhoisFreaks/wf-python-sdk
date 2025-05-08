@@ -14,10 +14,10 @@ class BaseClientWrapper:
 
     def get_headers(self) -> typing.Dict[str, str]:
         headers: typing.Dict[str, str] = {
-            "User-Agent": "py-whoisfreaks/0.0.39",
+            "User-Agent": "py-whoisfreaks/0.0.40",
             "X-Fern-Language": "Python",
             "X-Fern-SDK-Name": "py-whoisfreaks",
-            "X-Fern-SDK-Version": "0.0.39",
+            "X-Fern-SDK-Version": "0.0.40",
         }
         return headers
 

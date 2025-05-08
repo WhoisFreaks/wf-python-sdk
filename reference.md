@@ -828,7 +828,7 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 </dl>
 </details>
 
-<details><summary><code>client.domain_availability.<a href="src/whoisfreaks/domain_availability/client.py">bulk_domain_availability_lookup_with_custom_tl_ds</a>(...)</code></summary>
+<details><summary><code>client.domain_availability.<a href="src/whoisfreaks/domain_availability/client.py">bulk_domain_availability_lookup_with_custom_tlds</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -858,7 +858,7 @@ Check availability of multiple Domain Names with custom TLDs
 from whoisfreaks import WhoisfreaksApi
 from whoisfreaks.environment import WhoisfreaksApiEnvironment
 client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.domain_availability.bulk_domain_availability_lookup_with_custom_tl_ds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
+client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
 
 ```
 </dd>
