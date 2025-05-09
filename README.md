@@ -21,9 +21,8 @@ Instantiate and use the client with the following:
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', domain_names=['whoisfreaks.com', 'jfreaks.com'], ip_addresses=['1.1.1.1', '8.8.8.8'], )
+client = WhoisfreaksApi()
+client.bulk_domain_lookup(api_key='apiKey', )
 ```
 
 ## Async Client
@@ -32,11 +31,10 @@ The SDK also exports an `async` client so that you can make non-blocking calls t
 
 ```python
 from whoisfreaks import AsyncWhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
 import asyncio
-client = AsyncWhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
+client = AsyncWhoisfreaksApi()
 async def main() -> None:
-    await client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', domain_names=['whoisfreaks.com', 'jfreaks.com'], ip_addresses=['1.1.1.1', '8.8.8.8'], )
+    await client.bulk_domain_lookup(api_key='apiKey', )
 asyncio.run(main())```
 
 ## Exception Handling
@@ -47,7 +45,7 @@ will be thrown.
 ```python
 from whoisfreaks.core.api_error import ApiError
 try:
-    client.dns.bulk_dns_lookup(...)
+    client.bulk_domain_lookup(...)
 except ApiError as e:
     print(e.status_code)
     print(e.body)
@@ -63,7 +61,7 @@ The `.with_raw_response` property returns a "raw" client that can be used to acc
 ```python
 from whoisfreaks import WhoisfreaksApi
 client = WhoisfreaksApi(..., )
-response = client.dns.with_raw_response.bulk_dns_lookup(...)
+response = client.with_raw_response.bulk_domain_lookup(...)
 print(response.headers)  # access the response headers
 print(response.data)  # access the underlying object
 ```
@@ -83,7 +81,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `max_retries` request option to configure this behavior.
 
 ```python
-client.dns.bulk_dns_lookup(..., request_options={
+client.bulk_domain_lookup(..., request_options={
     "max_retries": 1
 })
 ```
@@ -98,7 +96,7 @@ from whoisfreaks import WhoisfreaksApi
 client = WhoisfreaksApi(..., timeout=20.0, )
 
 # Override timeout for a specific method
-client.dns.bulk_dns_lookup(..., request_options={
+client.bulk_domain_lookup(..., request_options={
     "timeout_in_seconds": 1
 })
 ```

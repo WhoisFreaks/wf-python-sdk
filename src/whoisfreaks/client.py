@@ -4,13 +4,22 @@ import typing
 
 import httpx
 from .core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
-from .credits.client import AsyncCreditsClient, CreditsClient
-from .dns.client import AsyncDnsClient, DnsClient
-from .domain_availability.client import AsyncDomainAvailabilityClient, DomainAvailabilityClient
+from .core.request_options import RequestOptions
 from .environment import WhoisfreaksApiEnvironment
-from .file_status.client import AsyncFileStatusClient, FileStatusClient
-from .ssl.client import AsyncSslClient, SslClient
-from .whois.client import AsyncWhoisClient, WhoisClient
+from .raw_client import AsyncRawWhoisfreaksApi, RawWhoisfreaksApi
+from .types.get_v_10_asn_whois_response import GetV10AsnWhoisResponse
+from .types.get_v_10_domain_availability_response import GetV10DomainAvailabilityResponse
+from .types.get_v_10_ip_whois_response import GetV10IpWhoisResponse
+from .types.get_v_10_ssl_live_response import GetV10SslLiveResponse
+from .types.get_v_10_whois_response import GetV10WhoisResponse
+from .types.get_v_20_dns_historical_response import GetV20DnsHistoricalResponse
+from .types.get_v_20_dns_live_response import GetV20DnsLiveResponse
+from .types.get_v_21_dns_reverse_response import GetV21DnsReverseResponse
+from .types.post_v_10_bulkwhois_response import PostV10BulkwhoisResponse
+from .types.post_v_20_dns_bulk_live_response import PostV20DnsBulkLiveResponse
+
+# this is used as the default value for optional parameters
+OMIT = typing.cast(typing.Any, ...)
 
 
 class WhoisfreaksApi:
@@ -19,8 +28,15 @@ class WhoisfreaksApi:
 
     Parameters
     ----------
+    base_url : typing.Optional[str]
+        The base url to use for requests from the client.
+
     environment : WhoisfreaksApiEnvironment
-        The environment to use for requests from the client.
+        The environment to use for requests from the client. from .environment import WhoisfreaksApiEnvironment
+
+        Defaults to WhoisfreaksApiEnvironment.DEFAULT
+
+
 
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
@@ -34,14 +50,14 @@ class WhoisfreaksApi:
     Examples
     --------
     from whoisfreaks import WhoisfreaksApi
-    from whoisfreaks.environment import WhoisfreaksApiEnvironment
-    client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
+    client = WhoisfreaksApi()
     """
 
     def __init__(
         self,
         *,
-        environment: WhoisfreaksApiEnvironment,
+        base_url: typing.Optional[str] = None,
+        environment: WhoisfreaksApiEnvironment = WhoisfreaksApiEnvironment.DEFAULT,
         timeout: typing.Optional[float] = None,
         follow_redirects: typing.Optional[bool] = True,
         httpx_client: typing.Optional[httpx.Client] = None,
@@ -50,7 +66,7 @@ class WhoisfreaksApi:
             timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
         )
         self._client_wrapper = SyncClientWrapper(
-            environment=environment,
+            base_url=_get_base_url(base_url=base_url, environment=environment),
             httpx_client=httpx_client
             if httpx_client is not None
             else httpx.Client(timeout=_defaulted_timeout, follow_redirects=follow_redirects)
@@ -58,12 +74,554 @@ class WhoisfreaksApi:
             else httpx.Client(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self.credits = CreditsClient(client_wrapper=self._client_wrapper)
-        self.dns = DnsClient(client_wrapper=self._client_wrapper)
-        self.domain_availability = DomainAvailabilityClient(client_wrapper=self._client_wrapper)
-        self.file_status = FileStatusClient(client_wrapper=self._client_wrapper)
-        self.ssl = SslClient(client_wrapper=self._client_wrapper)
-        self.whois = WhoisClient(client_wrapper=self._client_wrapper)
+        self._raw_client = RawWhoisfreaksApi(client_wrapper=self._client_wrapper)
+
+    @property
+    def with_raw_response(self) -> RawWhoisfreaksApi:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+
+        Returns
+        -------
+        RawWhoisfreaksApi
+        """
+        return self._raw_client
+
+    def whois_lookups(
+        self,
+        *,
+        whois: str,
+        api_key: str,
+        domain_name: typing.Optional[str] = None,
+        keyword: typing.Optional[str] = None,
+        email: typing.Optional[str] = None,
+        owner: typing.Optional[str] = None,
+        company: typing.Optional[str] = None,
+        mode: typing.Optional[str] = None,
+        exact: typing.Optional[str] = None,
+        includes: typing.Optional[str] = None,
+        page: typing.Optional[str] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10WhoisResponse:
+        """
+        Fetch live and historical WHOIS data for any domain, and perform reverse lookups to find domains associated with a specific registrant, company, email, or keyword. Instantly retrieve current registration details, explore past WHOIS records, or discover all domains linked to a specific registrant, company, email, or keyword.
+
+        Parameters
+        ----------
+        whois : str
+            The type of WHOIS lookup (live, historical, reverse)
+
+        api_key : str
+            Your API key
+
+        domain_name : typing.Optional[str]
+            The domain name for Live and Historical WHOIS lookup
+
+        keyword : typing.Optional[str]
+            Keyword to search for in registrant information (optional)
+
+        email : typing.Optional[str]
+            Email to search for (optional)
+
+        owner : typing.Optional[str]
+            Owner to search for (optional)
+
+        company : typing.Optional[str]
+            Company to search for (optional)
+
+        mode : typing.Optional[str]
+            Mode of search (optional)
+
+        exact : typing.Optional[str]
+            Exact match flag (optional)
+
+        includes : typing.Optional[str]
+            Include specific details (optional)
+
+        page : typing.Optional[str]
+            The page number of the reverse records (optional)
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10WhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.whois_lookups(whois='whois', api_key='apiKey', )
+        """
+        _response = self._raw_client.whois_lookups(
+            whois=whois,
+            api_key=api_key,
+            domain_name=domain_name,
+            keyword=keyword,
+            email=email,
+            owner=owner,
+            company=company,
+            mode=mode,
+            exact=exact,
+            includes=includes,
+            page=page,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def bulk_domain_lookup(
+        self,
+        *,
+        api_key: str,
+        format: typing.Optional[str] = None,
+        domain_names: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PostV10BulkwhoisResponse:
+        """
+        Fetch Live WHOIS information for a list of domains in bulk
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        domain_names : typing.Optional[typing.Sequence[str]]
+            List of domain names to lookup
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PostV10BulkwhoisResponse
+            Successful bulk WHOIS lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.bulk_domain_lookup(api_key='apiKey', )
+        """
+        _response = self._raw_client.bulk_domain_lookup(
+            api_key=api_key, format=format, domain_names=domain_names, request_options=request_options
+        )
+        return _response.data
+
+    def ip_whois_lookup(
+        self,
+        *,
+        api_key: str,
+        ip: str,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10IpWhoisResponse:
+        """
+        Retrieve real-time information for an IPv4 or IPv6 address
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        ip : str
+            The IPv4 or IPv6 for lookup
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10IpWhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.ip_whois_lookup(api_key='apiKey', ip='ip', )
+        """
+        _response = self._raw_client.ip_whois_lookup(
+            api_key=api_key, ip=ip, format=format, request_options=request_options
+        )
+        return _response.data
+
+    def asn_lookup(
+        self,
+        *,
+        api_key: str,
+        asn: str,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10AsnWhoisResponse:
+        """
+        Retrieve real-time information for an Autonomous System Number
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        asn : str
+            The ASN number for which information is being requested (e.g., "1" or "AS1").
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10AsnWhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.asn_lookup(api_key='apiKey', asn='asn', )
+        """
+        _response = self._raw_client.asn_lookup(
+            api_key=api_key, asn=asn, format=format, request_options=request_options
+        )
+        return _response.data
+
+    def ssl_live_lookup(
+        self,
+        *,
+        api_key: str,
+        domain_name: str,
+        chain: typing.Optional[bool] = None,
+        ssl_raw: typing.Optional[bool] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10SslLiveResponse:
+        """
+        Retrieve live SSL information for a specific domain.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain_name : str
+            The domain name for which live SSL information is requested (e.g., "example.com").
+
+        chain : typing.Optional[bool]
+            A boolean flag indicating whether to include SSL certificate chain information.
+
+        ssl_raw : typing.Optional[bool]
+            A boolean flag indicating whether to include raw SSL certificate information.
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10SslLiveResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.ssl_live_lookup(api_key='apiKey', domain_name='domainName', )
+        """
+        _response = self._raw_client.ssl_live_lookup(
+            api_key=api_key,
+            domain_name=domain_name,
+            chain=chain,
+            ssl_raw=ssl_raw,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def domain_availability_lookup(
+        self,
+        *,
+        api_key: str,
+        domain: str,
+        sug: typing.Optional[bool] = None,
+        count: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10DomainAvailabilityResponse:
+        """
+        Check availability of a Domain Name.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain : str
+            The domain name for which availability is being checked.
+
+        sug : typing.Optional[bool]
+            A boolean flag indicating whether suggested domains are included.
+
+        count : typing.Optional[int]
+            The number of suggested domains to return.
+
+        format : typing.Optional[str]
+            Format of the response (optional). Default is JSON.
+
+        source : typing.Optional[str]
+            Source information for the domain availability check (optional).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10DomainAvailabilityResponse
+            Successful domain availability lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.domain_availability_lookup(api_key='apiKey', domain='whoisfreaks.com', )
+        """
+        _response = self._raw_client.domain_availability_lookup(
+            api_key=api_key,
+            domain=domain,
+            sug=sug,
+            count=count,
+            format=format,
+            source=source,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def live_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        type: str,
+        domain_name: typing.Optional[str] = None,
+        ip_address: typing.Optional[str] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV20DnsLiveResponse:
+        """
+        Retrieve live DNS information for a specific domain or IP address.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        type : str
+            The DNS record type (e.g., A, MX, NS).
+
+        domain_name : typing.Optional[str]
+            The domain name for which live DNS information is requested (e.g., "example.com").
+
+        ip_address : typing.Optional[str]
+            The IP address for which live DNS information is requested (e.g., "8.8.8.8").
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV20DnsLiveResponse
+            Successful live DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.live_dns_lookup(api_key='apiKey', type='type', )
+        """
+        _response = self._raw_client.live_dns_lookup(
+            api_key=api_key,
+            type=type,
+            domain_name=domain_name,
+            ip_address=ip_address,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def historical_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        domain_name: str,
+        type: str,
+        page: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV20DnsHistoricalResponse:
+        """
+        Retrieve historical DNS information for a specific domain.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain_name : str
+            The domain name for which historical DNS information is requested (e.g., "example.com").
+
+        type : str
+            The DNS record type (e.g., A, MX, NS).
+
+        page : typing.Optional[int]
+            The page number for paginated results.
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV20DnsHistoricalResponse
+            Successful historical DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.historical_dns_lookup(api_key='apiKey', domain_name='domainName', type='type', )
+        """
+        _response = self._raw_client.historical_dns_lookup(
+            api_key=api_key,
+            domain_name=domain_name,
+            type=type,
+            page=page,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    def reverse_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        value: str,
+        type: str,
+        page: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV21DnsReverseResponse:
+        """
+        Retrieve reverse DNS information for a given DNS record.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        value : str
+            The IP address for which reverse DNS information is requested (e.g., "8.8.8.8").
+
+        type : str
+            The type of DNS record to search for (e.g., "A", "MX").
+
+        page : typing.Optional[int]
+            Page number for pagination (optional).
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV21DnsReverseResponse
+            Successful reverse DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.reverse_dns_lookup(api_key='apiKey', value='value', type='type', )
+        """
+        _response = self._raw_client.reverse_dns_lookup(
+            api_key=api_key, value=value, type=type, page=page, format=format, request_options=request_options
+        )
+        return _response.data
+
+    def bulk_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        type: str,
+        format: typing.Optional[str] = None,
+        domain_names: typing.Optional[typing.Sequence[str]] = OMIT,
+        ip_addresses: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PostV20DnsBulkLiveResponse:
+        """
+        Retrieve DNS information for multiple domains or IP addresses in bulk.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        type : str
+            The DNS record type to filter by (e.g., "A", "MX", "all").
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        domain_names : typing.Optional[typing.Sequence[str]]
+            List of domain names for which DNS information is requested.
+
+        ip_addresses : typing.Optional[typing.Sequence[str]]
+            List of IP addresses for which reverse DNS information is requested.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PostV20DnsBulkLiveResponse
+            Successful bulk DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import WhoisfreaksApi
+        client = WhoisfreaksApi()
+        client.bulk_dns_lookup(api_key='apiKey', type='type', )
+        """
+        _response = self._raw_client.bulk_dns_lookup(
+            api_key=api_key,
+            type=type,
+            format=format,
+            domain_names=domain_names,
+            ip_addresses=ip_addresses,
+            request_options=request_options,
+        )
+        return _response.data
 
 
 class AsyncWhoisfreaksApi:
@@ -72,8 +630,15 @@ class AsyncWhoisfreaksApi:
 
     Parameters
     ----------
+    base_url : typing.Optional[str]
+        The base url to use for requests from the client.
+
     environment : WhoisfreaksApiEnvironment
-        The environment to use for requests from the client.
+        The environment to use for requests from the client. from .environment import WhoisfreaksApiEnvironment
+
+        Defaults to WhoisfreaksApiEnvironment.DEFAULT
+
+
 
     timeout : typing.Optional[float]
         The timeout to be used, in seconds, for requests. By default the timeout is 60 seconds, unless a custom httpx client is used, in which case this default is not enforced.
@@ -87,14 +652,14 @@ class AsyncWhoisfreaksApi:
     Examples
     --------
     from whoisfreaks import AsyncWhoisfreaksApi
-    from whoisfreaks.environment import WhoisfreaksApiEnvironment
-    client = AsyncWhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
+    client = AsyncWhoisfreaksApi()
     """
 
     def __init__(
         self,
         *,
-        environment: WhoisfreaksApiEnvironment,
+        base_url: typing.Optional[str] = None,
+        environment: WhoisfreaksApiEnvironment = WhoisfreaksApiEnvironment.DEFAULT,
         timeout: typing.Optional[float] = None,
         follow_redirects: typing.Optional[bool] = True,
         httpx_client: typing.Optional[httpx.AsyncClient] = None,
@@ -103,7 +668,7 @@ class AsyncWhoisfreaksApi:
             timeout if timeout is not None else 60 if httpx_client is None else httpx_client.timeout.read
         )
         self._client_wrapper = AsyncClientWrapper(
-            environment=environment,
+            base_url=_get_base_url(base_url=base_url, environment=environment),
             httpx_client=httpx_client
             if httpx_client is not None
             else httpx.AsyncClient(timeout=_defaulted_timeout, follow_redirects=follow_redirects)
@@ -111,9 +676,590 @@ class AsyncWhoisfreaksApi:
             else httpx.AsyncClient(timeout=_defaulted_timeout),
             timeout=_defaulted_timeout,
         )
-        self.credits = AsyncCreditsClient(client_wrapper=self._client_wrapper)
-        self.dns = AsyncDnsClient(client_wrapper=self._client_wrapper)
-        self.domain_availability = AsyncDomainAvailabilityClient(client_wrapper=self._client_wrapper)
-        self.file_status = AsyncFileStatusClient(client_wrapper=self._client_wrapper)
-        self.ssl = AsyncSslClient(client_wrapper=self._client_wrapper)
-        self.whois = AsyncWhoisClient(client_wrapper=self._client_wrapper)
+        self._raw_client = AsyncRawWhoisfreaksApi(client_wrapper=self._client_wrapper)
+
+    @property
+    def with_raw_response(self) -> AsyncRawWhoisfreaksApi:
+        """
+        Retrieves a raw implementation of this client that returns raw responses.
+
+        Returns
+        -------
+        AsyncRawWhoisfreaksApi
+        """
+        return self._raw_client
+
+    async def whois_lookups(
+        self,
+        *,
+        whois: str,
+        api_key: str,
+        domain_name: typing.Optional[str] = None,
+        keyword: typing.Optional[str] = None,
+        email: typing.Optional[str] = None,
+        owner: typing.Optional[str] = None,
+        company: typing.Optional[str] = None,
+        mode: typing.Optional[str] = None,
+        exact: typing.Optional[str] = None,
+        includes: typing.Optional[str] = None,
+        page: typing.Optional[str] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10WhoisResponse:
+        """
+        Fetch live and historical WHOIS data for any domain, and perform reverse lookups to find domains associated with a specific registrant, company, email, or keyword. Instantly retrieve current registration details, explore past WHOIS records, or discover all domains linked to a specific registrant, company, email, or keyword.
+
+        Parameters
+        ----------
+        whois : str
+            The type of WHOIS lookup (live, historical, reverse)
+
+        api_key : str
+            Your API key
+
+        domain_name : typing.Optional[str]
+            The domain name for Live and Historical WHOIS lookup
+
+        keyword : typing.Optional[str]
+            Keyword to search for in registrant information (optional)
+
+        email : typing.Optional[str]
+            Email to search for (optional)
+
+        owner : typing.Optional[str]
+            Owner to search for (optional)
+
+        company : typing.Optional[str]
+            Company to search for (optional)
+
+        mode : typing.Optional[str]
+            Mode of search (optional)
+
+        exact : typing.Optional[str]
+            Exact match flag (optional)
+
+        includes : typing.Optional[str]
+            Include specific details (optional)
+
+        page : typing.Optional[str]
+            The page number of the reverse records (optional)
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10WhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.whois_lookups(whois='whois', api_key='apiKey', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.whois_lookups(
+            whois=whois,
+            api_key=api_key,
+            domain_name=domain_name,
+            keyword=keyword,
+            email=email,
+            owner=owner,
+            company=company,
+            mode=mode,
+            exact=exact,
+            includes=includes,
+            page=page,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def bulk_domain_lookup(
+        self,
+        *,
+        api_key: str,
+        format: typing.Optional[str] = None,
+        domain_names: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PostV10BulkwhoisResponse:
+        """
+        Fetch Live WHOIS information for a list of domains in bulk
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        domain_names : typing.Optional[typing.Sequence[str]]
+            List of domain names to lookup
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PostV10BulkwhoisResponse
+            Successful bulk WHOIS lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.bulk_domain_lookup(api_key='apiKey', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.bulk_domain_lookup(
+            api_key=api_key, format=format, domain_names=domain_names, request_options=request_options
+        )
+        return _response.data
+
+    async def ip_whois_lookup(
+        self,
+        *,
+        api_key: str,
+        ip: str,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10IpWhoisResponse:
+        """
+        Retrieve real-time information for an IPv4 or IPv6 address
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        ip : str
+            The IPv4 or IPv6 for lookup
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10IpWhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.ip_whois_lookup(api_key='apiKey', ip='ip', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.ip_whois_lookup(
+            api_key=api_key, ip=ip, format=format, request_options=request_options
+        )
+        return _response.data
+
+    async def asn_lookup(
+        self,
+        *,
+        api_key: str,
+        asn: str,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10AsnWhoisResponse:
+        """
+        Retrieve real-time information for an Autonomous System Number
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        asn : str
+            The ASN number for which information is being requested (e.g., "1" or "AS1").
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10AsnWhoisResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.asn_lookup(api_key='apiKey', asn='asn', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.asn_lookup(
+            api_key=api_key, asn=asn, format=format, request_options=request_options
+        )
+        return _response.data
+
+    async def ssl_live_lookup(
+        self,
+        *,
+        api_key: str,
+        domain_name: str,
+        chain: typing.Optional[bool] = None,
+        ssl_raw: typing.Optional[bool] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10SslLiveResponse:
+        """
+        Retrieve live SSL information for a specific domain.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain_name : str
+            The domain name for which live SSL information is requested (e.g., "example.com").
+
+        chain : typing.Optional[bool]
+            A boolean flag indicating whether to include SSL certificate chain information.
+
+        ssl_raw : typing.Optional[bool]
+            A boolean flag indicating whether to include raw SSL certificate information.
+
+        format : typing.Optional[str]
+            Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10SslLiveResponse
+            Successful lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.ssl_live_lookup(api_key='apiKey', domain_name='domainName', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.ssl_live_lookup(
+            api_key=api_key,
+            domain_name=domain_name,
+            chain=chain,
+            ssl_raw=ssl_raw,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def domain_availability_lookup(
+        self,
+        *,
+        api_key: str,
+        domain: str,
+        sug: typing.Optional[bool] = None,
+        count: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        source: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV10DomainAvailabilityResponse:
+        """
+        Check availability of a Domain Name.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain : str
+            The domain name for which availability is being checked.
+
+        sug : typing.Optional[bool]
+            A boolean flag indicating whether suggested domains are included.
+
+        count : typing.Optional[int]
+            The number of suggested domains to return.
+
+        format : typing.Optional[str]
+            Format of the response (optional). Default is JSON.
+
+        source : typing.Optional[str]
+            Source information for the domain availability check (optional).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV10DomainAvailabilityResponse
+            Successful domain availability lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.domain_availability_lookup(api_key='apiKey', domain='whoisfreaks.com', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.domain_availability_lookup(
+            api_key=api_key,
+            domain=domain,
+            sug=sug,
+            count=count,
+            format=format,
+            source=source,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def live_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        type: str,
+        domain_name: typing.Optional[str] = None,
+        ip_address: typing.Optional[str] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV20DnsLiveResponse:
+        """
+        Retrieve live DNS information for a specific domain or IP address.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        type : str
+            The DNS record type (e.g., A, MX, NS).
+
+        domain_name : typing.Optional[str]
+            The domain name for which live DNS information is requested (e.g., "example.com").
+
+        ip_address : typing.Optional[str]
+            The IP address for which live DNS information is requested (e.g., "8.8.8.8").
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV20DnsLiveResponse
+            Successful live DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.live_dns_lookup(api_key='apiKey', type='type', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.live_dns_lookup(
+            api_key=api_key,
+            type=type,
+            domain_name=domain_name,
+            ip_address=ip_address,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def historical_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        domain_name: str,
+        type: str,
+        page: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV20DnsHistoricalResponse:
+        """
+        Retrieve historical DNS information for a specific domain.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        domain_name : str
+            The domain name for which historical DNS information is requested (e.g., "example.com").
+
+        type : str
+            The DNS record type (e.g., A, MX, NS).
+
+        page : typing.Optional[int]
+            The page number for paginated results.
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV20DnsHistoricalResponse
+            Successful historical DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.historical_dns_lookup(api_key='apiKey', domain_name='domainName', type='type', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.historical_dns_lookup(
+            api_key=api_key,
+            domain_name=domain_name,
+            type=type,
+            page=page,
+            format=format,
+            request_options=request_options,
+        )
+        return _response.data
+
+    async def reverse_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        value: str,
+        type: str,
+        page: typing.Optional[int] = None,
+        format: typing.Optional[str] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> GetV21DnsReverseResponse:
+        """
+        Retrieve reverse DNS information for a given DNS record.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        value : str
+            The IP address for which reverse DNS information is requested (e.g., "8.8.8.8").
+
+        type : str
+            The type of DNS record to search for (e.g., "A", "MX").
+
+        page : typing.Optional[int]
+            Page number for pagination (optional).
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        GetV21DnsReverseResponse
+            Successful reverse DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.reverse_dns_lookup(api_key='apiKey', value='value', type='type', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.reverse_dns_lookup(
+            api_key=api_key, value=value, type=type, page=page, format=format, request_options=request_options
+        )
+        return _response.data
+
+    async def bulk_dns_lookup(
+        self,
+        *,
+        api_key: str,
+        type: str,
+        format: typing.Optional[str] = None,
+        domain_names: typing.Optional[typing.Sequence[str]] = OMIT,
+        ip_addresses: typing.Optional[typing.Sequence[str]] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> PostV20DnsBulkLiveResponse:
+        """
+        Retrieve DNS information for multiple domains or IP addresses in bulk.
+
+        Parameters
+        ----------
+        api_key : str
+            Your API key
+
+        type : str
+            The DNS record type to filter by (e.g., "A", "MX", "all").
+
+        format : typing.Optional[str]
+            The output format (JSON or XML).
+
+        domain_names : typing.Optional[typing.Sequence[str]]
+            List of domain names for which DNS information is requested.
+
+        ip_addresses : typing.Optional[typing.Sequence[str]]
+            List of IP addresses for which reverse DNS information is requested.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        PostV20DnsBulkLiveResponse
+            Successful bulk DNS lookup
+
+        Examples
+        --------
+        from whoisfreaks import AsyncWhoisfreaksApi
+        import asyncio
+        client = AsyncWhoisfreaksApi()
+        async def main() -> None:
+            await client.bulk_dns_lookup(api_key='apiKey', type='type', )
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.bulk_dns_lookup(
+            api_key=api_key,
+            type=type,
+            format=format,
+            domain_names=domain_names,
+            ip_addresses=ip_addresses,
+            request_options=request_options,
+        )
+        return _response.data
+
+
+def _get_base_url(*, base_url: typing.Optional[str] = None, environment: WhoisfreaksApiEnvironment) -> str:
+    if base_url is not None:
+        return base_url
+    elif environment is not None:
+        return environment.value
+    else:
+        raise Exception("Please pass in either base_url or environment to construct the client")

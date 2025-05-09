@@ -1,6 +1,5 @@
 # Reference
-## Credits
-<details><summary><code>client.credits.<a href="src/whoisfreaks/credits/client.py">credits_usage_api</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">whois_lookups</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -12,7 +11,7 @@
 <dl>
 <dd>
 
-You need credits to use Whois and DNS APIs. You can use this API to see your remaining credits for your API Key.
+Fetch live and historical WHOIS data for any domain, and perform reverse lookups to find domains associated with a specific registrant, company, email, or keyword. Instantly retrieve current registration details, explore past WHOIS records, or discover all domains linked to a specific registrant, company, email, or keyword.
 </dd>
 </dl>
 </dd>
@@ -28,9 +27,8 @@ You need credits to use Whois and DNS APIs. You can use this API to see your rem
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.credits.credits_usage_api(api_key='YOUR_API_KEY', )
+client = WhoisfreaksApi()
+client.whois_lookups(whois='whois', api_key='apiKey', )
 
 ```
 </dd>
@@ -46,7 +44,95 @@ client.credits.credits_usage_api(api_key='YOUR_API_KEY', )
 <dl>
 <dd>
 
-**api_key:** `str` 
+**whois:** `str` — The type of WHOIS lookup (live, historical, reverse)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**api_key:** `str` — Your API key
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**domain_name:** `typing.Optional[str]` — The domain name for Live and Historical WHOIS lookup
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**keyword:** `typing.Optional[str]` — Keyword to search for in registrant information (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**email:** `typing.Optional[str]` — Email to search for (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**owner:** `typing.Optional[str]` — Owner to search for (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**company:** `typing.Optional[str]` — Company to search for (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**mode:** `typing.Optional[str]` — Mode of search (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**exact:** `typing.Optional[str]` — Exact match flag (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**includes:** `typing.Optional[str]` — Include specific details (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page:** `typing.Optional[str]` — The page number of the reverse records (optional)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**format:** `typing.Optional[str]` — Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
     
 </dd>
 </dl>
@@ -66,8 +152,7 @@ client.credits.credits_usage_api(api_key='YOUR_API_KEY', )
 </dl>
 </details>
 
-## Dns
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">live_dns_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">bulk_domain_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -79,7 +164,7 @@ client.credits.credits_usage_api(api_key='YOUR_API_KEY', )
 <dl>
 <dd>
 
-Get Live DNS information for a domain or an IP address
+Fetch Live WHOIS information for a list of domains in bulk
 </dd>
 </dl>
 </dd>
@@ -95,9 +180,8 @@ Get Live DNS information for a domain or an IP address
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='all', )
+client = WhoisfreaksApi()
+client.bulk_domain_lookup(api_key='apiKey', )
 
 ```
 </dd>
@@ -113,7 +197,7 @@ client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', typ
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -121,7 +205,7 @@ client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', typ
 <dl>
 <dd>
 
-**type:** `str` 
+**format:** `typing.Optional[str]` — Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
     
 </dd>
 </dl>
@@ -129,23 +213,7 @@ client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', typ
 <dl>
 <dd>
 
-**domain_name:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**ip_address:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
+**domain_names:** `typing.Optional[typing.Sequence[str]]` — List of domain names to lookup
     
 </dd>
 </dl>
@@ -165,7 +233,7 @@ client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', typ
 </dl>
 </details>
 
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">ns_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">ip_whois_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -177,7 +245,7 @@ client.dns.live_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', typ
 <dl>
 <dd>
 
-Get NS information for a domain
+Retrieve real-time information for an IPv4 or IPv6 address
 </dd>
 </dl>
 </dd>
@@ -193,9 +261,8 @@ Get NS information for a domain
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns', )
+client = WhoisfreaksApi()
+client.ip_whois_lookup(api_key='apiKey', ip='ip', )
 
 ```
 </dd>
@@ -211,7 +278,7 @@ client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns'
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -219,7 +286,7 @@ client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns'
 <dl>
 <dd>
 
-**type:** `str` 
+**ip:** `str` — The IPv4 or IPv6 for lookup
     
 </dd>
 </dl>
@@ -227,15 +294,7 @@ client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns'
 <dl>
 <dd>
 
-**domain_name:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
+**format:** `typing.Optional[str]` — Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
     
 </dd>
 </dl>
@@ -255,7 +314,7 @@ client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns'
 </dl>
 </details>
 
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">mx_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">asn_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -267,7 +326,7 @@ client.dns.ns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='ns'
 <dl>
 <dd>
 
-Get MX information for a domain
+Retrieve real-time information for an Autonomous System Number
 </dd>
 </dl>
 </dd>
@@ -283,9 +342,8 @@ Get MX information for a domain
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx', )
+client = WhoisfreaksApi()
+client.asn_lookup(api_key='apiKey', asn='asn', )
 
 ```
 </dd>
@@ -301,7 +359,7 @@ client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx'
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -309,7 +367,7 @@ client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx'
 <dl>
 <dd>
 
-**type:** `str` 
+**asn:** `str` — The ASN number for which information is being requested (e.g., "1" or "AS1").
     
 </dd>
 </dl>
@@ -317,15 +375,7 @@ client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx'
 <dl>
 <dd>
 
-**domain_name:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
+**format:** `typing.Optional[str]` — Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
     
 </dd>
 </dl>
@@ -345,7 +395,7 @@ client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx'
 </dl>
 </details>
 
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">historical_dns_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">ssl_live_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -357,7 +407,7 @@ client.dns.mx_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='mx'
 <dl>
 <dd>
 
-Get Historical DNS information for a domain
+Retrieve live SSL information for a specific domain.
 </dd>
 </dl>
 </dd>
@@ -373,9 +423,8 @@ Get Historical DNS information for a domain
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com', type='all', page=1, )
+client = WhoisfreaksApi()
+client.ssl_live_lookup(api_key='apiKey', domain_name='domainName', )
 
 ```
 </dd>
@@ -391,7 +440,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -399,7 +448,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-**domain_name:** `str` 
+**domain_name:** `str` — The domain name for which live SSL information is requested (e.g., "example.com").
     
 </dd>
 </dl>
@@ -407,7 +456,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-**type:** `str` 
+**chain:** `typing.Optional[bool]` — A boolean flag indicating whether to include SSL certificate chain information.
     
 </dd>
 </dl>
@@ -415,7 +464,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-**page:** `typing.Optional[int]` 
+**ssl_raw:** `typing.Optional[bool]` — A boolean flag indicating whether to include raw SSL certificate information.
     
 </dd>
 </dl>
@@ -423,7 +472,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
+**format:** `typing.Optional[str]` — Two formats are available JSON, XML. If you don't specify the 'format' parameter, the default format will be JSON.
     
 </dd>
 </dl>
@@ -443,7 +492,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 </dl>
 </details>
 
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">reverse_dns_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">domain_availability_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -455,7 +504,7 @@ client.dns.historical_dns_lookup(api_key='YOUR_API_KEY', domain_name='google.com
 <dl>
 <dd>
 
-Get Reverse DNS info for a DNS record
+Check availability of a Domain Name.
 </dd>
 </dl>
 </dd>
@@ -471,9 +520,8 @@ Get Reverse DNS info for a DNS record
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a', page=1, format='json', )
+client = WhoisfreaksApi()
+client.domain_availability_lookup(api_key='apiKey', domain='whoisfreaks.com', )
 
 ```
 </dd>
@@ -489,7 +537,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -497,7 +545,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-**value:** `str` 
+**domain:** `str` — The domain name for which availability is being checked.
     
 </dd>
 </dl>
@@ -505,7 +553,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-**type:** `str` 
+**sug:** `typing.Optional[bool]` — A boolean flag indicating whether suggested domains are included.
     
 </dd>
 </dl>
@@ -513,7 +561,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-**page:** `typing.Optional[int]` 
+**count:** `typing.Optional[int]` — The number of suggested domains to return.
     
 </dd>
 </dl>
@@ -521,7 +569,15 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
+**format:** `typing.Optional[str]` — Format of the response (optional). Default is JSON.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**source:** `typing.Optional[str]` — Source information for the domain availability check (optional).
     
 </dd>
 </dl>
@@ -541,7 +597,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 </dl>
 </details>
 
-<details><summary><code>client.dns.<a href="src/whoisfreaks/dns/client.py">bulk_dns_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">live_dns_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -553,7 +609,7 @@ client.dns.reverse_dns_lookup(api_key='YOUR_API_KEY', value='8.8.8.8', type='a',
 <dl>
 <dd>
 
-Get Bulk DNS information for multiple domains or IP addresses
+Retrieve live DNS information for a specific domain or IP address.
 </dd>
 </dl>
 </dd>
@@ -569,9 +625,8 @@ Get Bulk DNS information for multiple domains or IP addresses
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', domain_names=['whoisfreaks.com', 'jfreaks.com'], ip_addresses=['1.1.1.1', '8.8.8.8'], )
+client = WhoisfreaksApi()
+client.live_dns_lookup(api_key='apiKey', type='type', )
 
 ```
 </dd>
@@ -587,7 +642,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -595,7 +650,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-**type:** `str` 
+**type:** `str` — The DNS record type (e.g., A, MX, NS).
     
 </dd>
 </dl>
@@ -603,7 +658,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
+**domain_name:** `typing.Optional[str]` — The domain name for which live DNS information is requested (e.g., "example.com").
     
 </dd>
 </dl>
@@ -611,7 +666,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-**domain_names:** `typing.Optional[typing.Sequence[str]]` 
+**ip_address:** `typing.Optional[str]` — The IP address for which live DNS information is requested (e.g., "8.8.8.8").
     
 </dd>
 </dl>
@@ -619,7 +674,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-**ip_addresses:** `typing.Optional[typing.Sequence[str]]` 
+**format:** `typing.Optional[str]` — The output format (JSON or XML).
     
 </dd>
 </dl>
@@ -639,8 +694,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 </dl>
 </details>
 
-## DomainAvailability
-<details><summary><code>client.domain_availability.<a href="src/whoisfreaks/domain_availability/client.py">domain_availability_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">historical_dns_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -652,7 +706,7 @@ client.dns.bulk_dns_lookup(api_key='YOUR_API_KEY', type='all', format='json', do
 <dl>
 <dd>
 
-Check availability of a Domain Name
+Retrieve historical DNS information for a specific domain.
 </dd>
 </dl>
 </dd>
@@ -668,9 +722,8 @@ Check availability of a Domain Name
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', domain='whoisfreaks.com', sug=True, count=10, source='dns', )
+client = WhoisfreaksApi()
+client.historical_dns_lookup(api_key='apiKey', domain_name='domainName', type='type', )
 
 ```
 </dd>
@@ -686,7 +739,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -694,7 +747,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-**domain:** `str` 
+**domain_name:** `str` — The domain name for which historical DNS information is requested (e.g., "example.com").
     
 </dd>
 </dl>
@@ -702,7 +755,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-**sug:** `typing.Optional[bool]` 
+**type:** `str` — The DNS record type (e.g., A, MX, NS).
     
 </dd>
 </dl>
@@ -710,7 +763,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-**count:** `typing.Optional[int]` 
+**page:** `typing.Optional[int]` — The page number for paginated results.
     
 </dd>
 </dl>
@@ -718,15 +771,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**source:** `typing.Optional[str]` 
+**format:** `typing.Optional[str]` — The output format (JSON or XML).
     
 </dd>
 </dl>
@@ -746,7 +791,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 </dl>
 </details>
 
-<details><summary><code>client.domain_availability.<a href="src/whoisfreaks/domain_availability/client.py">bulk_domain_availability_lookup</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">reverse_dns_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -758,7 +803,7 @@ client.domain_availability.domain_availability_lookup(api_key='YOUR_API_KEY', do
 <dl>
 <dd>
 
-Check availability of multiple Domain Names
+Retrieve reverse DNS information for a given DNS record.
 </dd>
 </dl>
 </dd>
@@ -774,9 +819,8 @@ Check availability of multiple Domain Names
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY', domain_names=['whoisfreaks.com', 'jfreaks.com'], )
+client = WhoisfreaksApi()
+client.reverse_dns_lookup(api_key='apiKey', value='value', type='type', )
 
 ```
 </dd>
@@ -792,7 +836,7 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -800,7 +844,7 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 <dl>
 <dd>
 
-**domain_names:** `typing.Sequence[str]` 
+**value:** `str` — The IP address for which reverse DNS information is requested (e.g., "8.8.8.8").
     
 </dd>
 </dl>
@@ -808,7 +852,23 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
+**type:** `str` — The type of DNS record to search for (e.g., "A", "MX").
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page:** `typing.Optional[int]` — Page number for pagination (optional).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**format:** `typing.Optional[str]` — The output format (JSON or XML).
     
 </dd>
 </dl>
@@ -828,7 +888,7 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 </dl>
 </details>
 
-<details><summary><code>client.domain_availability.<a href="src/whoisfreaks/domain_availability/client.py">bulk_domain_availability_lookup_with_custom_tlds</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">bulk_dns_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -840,7 +900,7 @@ client.domain_availability.bulk_domain_availability_lookup(api_key='YOUR_API_KEY
 <dl>
 <dd>
 
-Check availability of multiple Domain Names with custom TLDs
+Retrieve DNS information for multiple domains or IP addresses in bulk.
 </dd>
 </dl>
 </dd>
@@ -856,9 +916,8 @@ Check availability of multiple Domain Names with custom TLDs
 
 ```python
 from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_key='YOUR_API_KEY', domain='whoisfreaks.com', tld=['us', 'pk'], )
+client = WhoisfreaksApi()
+client.bulk_dns_lookup(api_key='apiKey', type='type', )
 
 ```
 </dd>
@@ -874,7 +933,7 @@ client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_
 <dl>
 <dd>
 
-**api_key:** `str` 
+**api_key:** `str` — Your API key
     
 </dd>
 </dl>
@@ -882,7 +941,7 @@ client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_
 <dl>
 <dd>
 
-**domain:** `str` 
+**type:** `str` — The DNS record type to filter by (e.g., "A", "MX", "all").
     
 </dd>
 </dl>
@@ -890,7 +949,7 @@ client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_
 <dl>
 <dd>
 
-**tld:** `typing.Sequence[str]` 
+**format:** `typing.Optional[str]` — The output format (JSON or XML).
     
 </dd>
 </dl>
@@ -898,7 +957,7 @@ client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_
 <dl>
 <dd>
 
-**format:** `typing.Optional[str]` 
+**domain_names:** `typing.Optional[typing.Sequence[str]]` — List of domain names for which DNS information is requested.
     
 </dd>
 </dl>
@@ -906,731 +965,7 @@ client.domain_availability.bulk_domain_availability_lookup_with_custom_tlds(api_
 <dl>
 <dd>
 
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## FileStatus
-<details><summary><code>client.file_status.<a href="src/whoisfreaks/file_status/client.py">file_status_api</a>()</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-The Whois Files Status API provides comprehensive details about the availability and update status of various Whois datasets. It includes several key datasets, such as:
-- Newly registered domains: Includes cleaned gTLDs, cleaned ccTLDs, gTLDs, DNS records, and ccTLDs.
-- Expired domains: Covers both cleaned and regular expired domains.
-- Dropped domains: Details on domains that have been removed or dropped.
-
-In addition to these datasets, the API offers information on the update frequency of Whois and DNS data. Updates are available in three time intervals:
-- Daily: Regularly updated Whois and DNS data.
-- Weekly: Whois and DNS data refreshed on a weekly basis.
-- Monthly: Monthly updates are provided for Whois data, though DNS updates may not always be available.
-This structure enables users to track the currency and availability of various domain datasets, ensuring access to the latest WHOIS and DNS information.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.file_status.file_status_api()
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## Ssl
-<details><summary><code>client.ssl.<a href="src/whoisfreaks/ssl/client.py">ssl_live_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Retrieve live SSL certificate details for a domain
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.ssl.ssl_live_lookup(api_key='YOUR_API_KEY', domain_name='google.com', chain=True, ssl_raw=True, )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**domain_name:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**chain:** `typing.Optional[bool]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**ssl_raw:** `typing.Optional[bool]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## Whois
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">live_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get live WHOIS information for a domain
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.live_lookup(api_key='YOUR_API_KEY', domain_name='888starzci.ci', whois='live', )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**domain_name:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**whois:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">historical_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get historical WHOIS records for a domain
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.historical_lookup(api_key='YOUR_API_KEY', domain_name='whoisfreaks.com', whois='historical', )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**domain_name:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**whois:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**page:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">reverse_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Perform a reverse WHOIS lookup based on registrant information
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.reverse_lookup(api_key='YOUR_API_KEY', whois='reverse', keyword='google', )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**whois:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**keyword:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**email:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**owner:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**company:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**mode:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**exact:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**includes:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**page:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">ip_whois_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get WHOIS information for an IP
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.ip_whois_lookup(api_key='YOUR_API_KEY', ip='8.8.8.8', )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**ip:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">asn_whois_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get WHOIS information for an ASN
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.asn_whois_lookup(api_key='YOUR_API_KEY', asn='1', )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**asn:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.whois.<a href="src/whoisfreaks/whois/client.py">bulk_domain_lookup</a>(...)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get Live WHOIS information for more than one domain names
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from whoisfreaks import WhoisfreaksApi
-from whoisfreaks.environment import WhoisfreaksApiEnvironment
-client = WhoisfreaksApi(environment=WhoisfreaksApiEnvironment.PRODUCTION, )
-client.whois.bulk_domain_lookup(api_key='YOUR_API_KEY', format='json', domain_names=['whoisfreaks.com', 'jfreaks.com'], )
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**api_key:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**domain_names:** `typing.Sequence[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**format:** `typing.Optional[str]` 
+**ip_addresses:** `typing.Optional[typing.Sequence[str]]` — List of IP addresses for which reverse DNS information is requested.
     
 </dd>
 </dl>
