@@ -1,3 +1,3 @@
 from importlib import metadata
 
-__version__ = metadata.version("py-whoisfreaks")
+__version__ = metadata.version("wf-python-sdk")

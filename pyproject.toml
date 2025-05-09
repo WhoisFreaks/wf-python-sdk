@@ -1,9 +1,9 @@
 [project]
-name = "py-whoisfreaks"
+name = "wf-python-sdk"
 
 [tool.poetry]
-name = "py-whoisfreaks"
-version = "0.0.41"
+name = "wf-python-sdk"
+version = "0.0.42"
 description = ""
 readme = "README.md"
 authors = []
