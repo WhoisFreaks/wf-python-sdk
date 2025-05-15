@@ -1,5 +1,5 @@
 # Reference
-<details><summary><code>client.<a href="src/whoisfreaks/client.py">whois_lookups</a>(...)</code></summary>
+<details><summary><code>client.<a href="src/whoisfreaks/client.py">whois_lookup</a>(...)</code></summary>
 <dl>
 <dd>
 
@@ -28,7 +28,7 @@ Fetch live and historical WHOIS data for any domain, and perform reverse lookups
 ```python
 from whoisfreaks import WhoisfreaksApi
 client = WhoisfreaksApi()
-client.whois_lookups(whois='whois', api_key='apiKey', )
+client.whois_lookup(whois='whois', api_key='apiKey', )
 
 ```
 </dd>

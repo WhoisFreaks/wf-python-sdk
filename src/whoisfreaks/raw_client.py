@@ -38,7 +38,7 @@ class RawWhoisfreaksApi:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def whois_lookups(
+    def whois_lookup(
         self,
         *,
         whois: str,
@@ -1685,7 +1685,7 @@ class AsyncRawWhoisfreaksApi:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    async def whois_lookups(
+    async def whois_lookup(
         self,
         *,
         whois: str,

@@ -87,7 +87,7 @@ class WhoisfreaksApi:
         """
         return self._raw_client
 
-    def whois_lookups(
+    def whois_lookup(
         self,
         *,
         whois: str,
@@ -157,9 +157,9 @@ class WhoisfreaksApi:
         --------
         from whoisfreaks import WhoisfreaksApi
         client = WhoisfreaksApi()
-        client.whois_lookups(whois='whois', api_key='apiKey', )
+        client.whois_lookup(whois='whois', api_key='apiKey', )
         """
-        _response = self._raw_client.whois_lookups(
+        _response = self._raw_client.whois_lookup(
             whois=whois,
             api_key=api_key,
             domain_name=domain_name,
@@ -689,7 +689,7 @@ class AsyncWhoisfreaksApi:
         """
         return self._raw_client
 
-    async def whois_lookups(
+    async def whois_lookup(
         self,
         *,
         whois: str,
@@ -761,10 +761,10 @@ class AsyncWhoisfreaksApi:
         import asyncio
         client = AsyncWhoisfreaksApi()
         async def main() -> None:
-            await client.whois_lookups(whois='whois', api_key='apiKey', )
+            await client.whois_lookup(whois='whois', api_key='apiKey', )
         asyncio.run(main())
         """
-        _response = await self._raw_client.whois_lookups(
+        _response = await self._raw_client.whois_lookup(
             whois=whois,
             api_key=api_key,
             domain_name=domain_name,
